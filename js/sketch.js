@@ -1,5 +1,6 @@
 var symbolSize = 24;
 var streams = [];
+var fadeInterval = 1.6;
 
 function setup() {
   createCanvas(
@@ -21,17 +22,19 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(0, 150);
   streams.forEach(function(stream) {
     stream.render();
   });
 }
 
-function Symbol(x, y, speed) {
+function Symbol(x, y, speed, first, opacity) {
   this.x = x;
   this.y = y;
   this.speed = speed;
-  this.switchInterval = round(random(2,20));
+  this.switchInterval = round(random(2, 20));
+  this.first = first;
+  this.opacity = opacity;
   this.value;
 
   this.setToRandomSymbol = function() {
@@ -50,7 +53,11 @@ function Symbol(x, y, speed) {
   }
 
   this.render = function() {
-    fill(0, 255, 70);
+    if (this.first) {
+      fill(140, 255, 190, this.opacity);
+    } else {
+      fill(0, 255, 70, this.opacity);
+    }
     text(this.value, this.x, this.y);
     this.rain();
     this.setToRandomSymbol();
@@ -67,11 +74,15 @@ function Stream() {
   this.speed = random(3, 6);
 
   this.generateSymbols = function(x, y) {
-    for (var i =0; i <= this.totalSymbols; i++) {
-      symbol = new Symbol(x, y, this.speed);
+    var opacity = 255;
+    var first = round(random(0, 4)) == 1;
+    for (var i = 0; i <= this.totalSymbols; i++) {
+      symbol = new Symbol(x, y, this.speed, first, opacity);
       symbol.setToRandomSymbol();
       this.symbols.push(symbol);
+      opacity -= (255 / this.totalSymbols) / fadeInterval;
       y -= symbolSize;
+      first = false;
     }
   }
 
