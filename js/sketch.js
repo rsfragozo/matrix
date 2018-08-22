@@ -1,5 +1,5 @@
-var symbol;
 var symbolSize = 24;
+var stream;
 
 function setup() {
   createCanvas(
@@ -8,14 +8,14 @@ function setup() {
   );
   background(0);
 
-  symbol = new Symbol(width / 2, 0, 5);
-  symbol.setToRandomSymbol();
+  stream = new Stream();
+  stream.generateSymbols(width / 2, 0);
   textSize(symbolSize);
 }
 
 function draw() {
   background(0);
-  symbol.render();
+  stream.render();
 }
 
 function Symbol(x, y, speed) {
@@ -52,4 +52,23 @@ function Symbol(x, y, speed) {
   }
 }
 
-function Stream() {}
+function Stream() {
+  this.symbols = [];
+  this.totalSymbols = round(random(5, 35));
+  this.speed = random(3, 6);
+
+  this.generateSymbols = function(x, y) {
+    for (var i =0; i <= this.totalSymbols; i++) {
+      symbol = new Symbol(x, y, this.speed);
+      symbol.setToRandomSymbol();
+      this.symbols.push(symbol);
+      y -= symbolSize;
+    }
+  }
+
+  this.render = function() {
+    this.symbols.forEach(function(symbol) {
+      symbol.render();
+    });
+  }
+}
