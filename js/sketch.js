@@ -22,18 +22,21 @@ function Symbol(x, y, speed) {
   this.x = x;
   this.y = y;
   this.speed = speed;
+  this.switchInterval = round(random(2,20));
   this.value;
 
   this.setToRandomSymbol = function() {
     var charType = round(random(0, 5));
-    if (charType > 1) {
-      // set it to Katakana
-      this.value = String.fromCharCode(
-        0x30A0 + round(random(0, 96))
-      );
-    } else {
-      // set it to numeric
-      this.value = round(random(0,9));
+    if (frameCount % this.switchInterval == 0) {
+      if (charType > 1) {
+        // set it to Katakana
+        this.value = String.fromCharCode(
+          0x30A0 + round(random(0, 96))
+        );
+      } else {
+        // set it to numeric
+        this.value = round(random(0,9));
+      }
     }
   }
 
@@ -41,6 +44,7 @@ function Symbol(x, y, speed) {
     fill(0, 255, 70);
     text(this.value, this.x, this.y);
     this.rain();
+    this.setToRandomSymbol();
   }
 
   this.rain = function() {
